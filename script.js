@@ -8,12 +8,20 @@ const soundMap = {
   wrong: "https://assets.mixkit.co/sfx/download/mixkit-wrong-answer-fail-notification-946.wav"
 };
 
-// Container
 const buttonsContainer = document.getElementById("buttons");
 let currentAudio = null;
 
-// Create a button for each sound
+// Create hidden <audio> elements and buttons
 Object.keys(soundMap).forEach((soundName) => {
+  // Create hidden audio element in DOM
+  const audioEl = document.createElement("audio");
+  audioEl.src = soundMap[soundName];
+  audioEl.id = soundName;
+  audioEl.preload = "auto"; // helps Cypress detect it
+  audioEl.style.display = "none"; // keep hidden
+  document.body.appendChild(audioEl);
+
+  // Create button
   const btn = document.createElement("button");
   btn.classList.add("btn");
   btn.textContent = soundName;
@@ -23,8 +31,8 @@ Object.keys(soundMap).forEach((soundName) => {
       currentAudio.pause();
       currentAudio.currentTime = 0;
     }
-    currentAudio = new Audio(soundMap[soundName]);
-    currentAudio.play().catch(err => console.error("Playback error:", err));
+    currentAudio = audioEl;
+    currentAudio.play().catch((err) => console.error("Playback error:", err));
   });
 
   buttonsContainer.appendChild(btn);
