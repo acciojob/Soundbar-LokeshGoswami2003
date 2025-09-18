@@ -1,37 +1,39 @@
-//your JS code here. If required.
-// List of sounds (use your actual filenames from /sounds folder)
-const sounds = ["sound1.mp3", "sound2.mp3", "sound3.mp3"];
+// Map of sound names to online URLs
+const soundMap = {
+  applause: "https://assets.mixkit.co/sfx/download/mixkit-audience-light-applause-354.wav",
+  boo: "https://assets.mixkit.co/sfx/download/mixkit-cartoon-boing-716.wav",
+  gasp: "https://assets.mixkit.co/sfx/download/mixkit-cartoon-gasp-655.wav",
+  tada: "https://assets.mixkit.co/sfx/download/mixkit-winning-chimes-2015.wav",
+  victory: "https://assets.mixkit.co/sfx/download/mixkit-game-level-completed-2059.wav",
+  wrong: "https://assets.mixkit.co/sfx/download/mixkit-wrong-answer-fail-notification-946.wav"
+};
 
-// Container for buttons
+// Container
 const buttonsContainer = document.getElementById("buttons");
-
-// Create an Audio object
 let currentAudio = null;
 
 // Create a button for each sound
-sounds.forEach((sound) => {
+Object.keys(soundMap).forEach((soundName) => {
   const btn = document.createElement("button");
   btn.classList.add("btn");
-  btn.textContent = sound.replace(".mp3", ""); // display name without .mp3
+  btn.textContent = soundName;
 
   btn.addEventListener("click", () => {
-    // Stop previous sound if playing
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
     }
-    // Play new sound
-    currentAudio = new Audio(`sounds/${sound}`);
-    currentAudio.play();
+    currentAudio = new Audio(soundMap[soundName]);
+    currentAudio.play().catch(err => console.error("Playback error:", err));
   });
 
   buttonsContainer.appendChild(btn);
 });
 
-// Create Stop button
+// Stop button
 const stopBtn = document.createElement("button");
 stopBtn.classList.add("stop");
-stopBtn.textContent = "Stop";
+stopBtn.textContent = "stop";
 
 stopBtn.addEventListener("click", () => {
   if (currentAudio) {
